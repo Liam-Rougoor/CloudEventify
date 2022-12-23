@@ -1,0 +1,27 @@
+name: CD
+
+on:
+  push:
+    branches:
+    - main
+
+defaults:
+  run:
+    shell: bash
+
+
+jobs:
+
+  mutation-tests:
+    name: Mutation Test
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+    - name: Mutation Test
+      run: |
+        dotnet tool install --global dotnet-stryker --version 3.2.0
+        dotnet stryker --reporter html --reporter progress --reporter "cleartext"
